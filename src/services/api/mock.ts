@@ -7,6 +7,7 @@ export const mockUser: User = {
   email: 'sardor.y@uzcard.mock',
   avatarColor: '#00BFA6',
   initials: 'SY',
+  kycStatus: 'verified',
 };
 
 export const mockCards: Card[] = [

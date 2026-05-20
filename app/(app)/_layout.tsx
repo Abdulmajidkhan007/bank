@@ -24,6 +24,7 @@ export default function AppLayout() {
       <Stack.Screen name="language" options={{ presentation: 'card' }} />
       <Stack.Screen name="notifications" options={{ presentation: 'card' }} />
       <Stack.Screen name="support" options={{ presentation: 'card' }} />
+      <Stack.Screen name="kyc" />
     </Stack>
   );
 }

@@ -12,6 +12,7 @@ import { BalanceCard } from '@/components/banking/BalanceCard';
 import { QuickAction } from '@/components/banking/QuickAction';
 import { TransactionRow } from '@/components/banking/TransactionRow';
 import { SectionHeader } from '@/components/banking/SectionHeader';
+import { KycBanner } from '@/components/banking/KycBanner';
 import { GlassCard } from '@/components/surfaces/GlassCard';
 import { IconButton } from '@/components/buttons/IconButton';
 import {
@@ -86,6 +87,12 @@ export default function HomeTab() {
         <Animated.View entering={FadeInDown.delay(60).duration(380)}>
           <BalanceCard amountUZS={totalUZS} />
         </Animated.View>
+
+        {user && user.kycStatus !== 'verified' ? (
+          <Animated.View entering={FadeInDown.delay(90).duration(380)}>
+            <KycBanner status={user.kycStatus} />
+          </Animated.View>
+        ) : null}
 
         <Animated.View entering={FadeInDown.delay(120).duration(380)} style={{ gap: spacing.md }}>
           <Text variant="h3">{t('home.quick_actions')}</Text>

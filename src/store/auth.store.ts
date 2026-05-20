@@ -106,6 +106,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           res.user.fullName
             ? res.user.fullName.trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase()).join('')
             : mockUser.initials,
+        kycStatus: res.user.kycStatus,
       };
 
       const existingPin = await secureStorage.getPinHash();

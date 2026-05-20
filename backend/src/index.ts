@@ -2,13 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import { config } from './config.js';
 import authRouter from './routes/auth.js';
+import kycRouter from './routes/kyc.js';
 import { rateLimit } from './middleware/rate-limit.js';
 import { requireAuth } from './middleware/auth.js';
+import { getStatus } from './kyc-store.js';
 
 const app = express();
 
 app.use(cors({ origin: config.corsOrigin === '*' ? true : config.corsOrigin.split(',') }));
-app.use(express.json({ limit: '64kb' }));
+app.use(express.json({ limit: '12mb' }));
 app.use(rateLimit);
 
 app.get('/health', (_req, res) => {
@@ -16,9 +18,18 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/auth', authRouter);
+app.use('/kyc', kycRouter);
 
 app.get('/me', requireAuth, (req, res) => {
-  res.json({ ok: true, user: req.user });
+  const userId = req.user!.sub;
+  res.json({
+    ok: true,
+    user: {
+      id: userId,
+      phone: `+${req.user!.phone}`,
+      kycStatus: getStatus(userId),
+    },
+  });
 });
 
 app.use((_req, res) => {

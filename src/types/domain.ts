@@ -66,6 +66,8 @@ export type PaymentService = {
   colorTo: string;
 };
 
+export type KycStatus = 'pending' | 'submitted' | 'verified' | 'rejected';
+
 export type User = {
   id: string;
   fullName: string;
@@ -73,4 +75,5 @@ export type User = {
   email?: string;
   avatarColor: string;
   initials: string;
+  kycStatus: KycStatus;
 };

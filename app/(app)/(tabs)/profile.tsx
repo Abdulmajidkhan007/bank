@@ -9,6 +9,7 @@ import { Text } from '@/components/primitives/Text';
 import { GlassCard } from '@/components/surfaces/GlassCard';
 import { PrimaryButton } from '@/components/buttons/PrimaryButton';
 import { Bell, ChevronRight, Globe, Lock, Shield, Sparkle, User, ChatBubble, Settings } from '@/components/icons';
+import { KycBanner } from '@/components/banking/KycBanner';
 import { useAuthStore } from '@/store/auth.store';
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -53,6 +54,10 @@ export default function ProfileTab() {
             </Pressable>
           </View>
         </GlassCard>
+
+        {user && user.kycStatus !== 'verified' ? (
+          <KycBanner status={user.kycStatus} />
+        ) : null}
 
         <GlassCard padded={false}>
           <Row icon={<Shield size={20} color={colors.text.primary} />} title={t('profile.security')} onPress={() => router.push('/(app)/security')} />

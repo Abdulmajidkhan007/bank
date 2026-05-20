@@ -14,16 +14,26 @@
       "supportsTablet": false,
       "bundleIdentifier": "uz.uzcard.bank",
       "infoPlist": {
-        "NSFaceIDUsageDescription": "Authenticate to access your accounts securely."
+        "NSFaceIDUsageDescription": "Authenticate to access your accounts securely.",
+        "NSCameraUsageDescription": "We need access to your camera to verify your identity."
       }
     },
     "android": {
-      "package": "uz.uzcard.bank"
+      "package": "uz.uzcard.bank",
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "expo-local-authentication"
+      "expo-local-authentication",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "We need access to your camera to verify your identity."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
