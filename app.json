@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "UzCard Bank",
+    "slug": "uzcard-bank",
+    "scheme": "uzcard",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B2A4A"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "uz.uzcard.bank",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Authenticate to access your accounts securely."
+      }
+    },
+    "android": {
+      "package": "uz.uzcard.bank",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0B2A4A"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-local-authentication"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

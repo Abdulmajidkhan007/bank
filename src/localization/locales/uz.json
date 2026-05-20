@@ -1,0 +1,171 @@
+{
+  "common": {
+    "continue": "Davom etish",
+    "next": "Keyingi",
+    "back": "Orqaga",
+    "skip": "O‘tkazib yuborish",
+    "done": "Tayyor",
+    "cancel": "Bekor qilish",
+    "confirm": "Tasdiqlash",
+    "save": "Saqlash",
+    "search": "Qidirish",
+    "all": "Hammasi",
+    "loading": "Yuklanmoqda",
+    "retry": "Qayta urinish",
+    "see_all": "Hammasini ko‘rish",
+    "amount": "Summa",
+    "balance": "Balans",
+    "total": "Jami",
+    "from": "Kimdan",
+    "to": "Kimga",
+    "today": "Bugun",
+    "yesterday": "Kecha"
+  },
+  "splash": {
+    "tagline": "Sizning ishonchli bankingiz"
+  },
+  "onboarding": {
+    "slide1_title": "Pulingiz, sizning qoidalaringiz",
+    "slide1_desc": "Bir oynada barcha kartalar va hisoblaringizni boshqaring.",
+    "slide2_title": "Tezkor to‘lovlar",
+    "slide2_desc": "Kommunal, mobil va boshqa xizmatlarni bir necha soniyada to‘lang.",
+    "slide3_title": "Bank xavfsizligi",
+    "slide3_desc": "Biometriya, PIN va doimiy himoya bilan xotirjamlik.",
+    "get_started": "Boshlash"
+  },
+  "auth": {
+    "phone_title": "Telefon raqamingiz",
+    "phone_desc": "Tasdiqlash uchun 6 xonali kod yuboramiz.",
+    "phone_placeholder": "+998 __ ___-__-__",
+    "agree": "Davom etish orqali siz {{terms}} va {{privacy}}ga rozilik bildirasiz.",
+    "terms": "Foydalanish shartlari",
+    "privacy": "Maxfiylik siyosati",
+    "otp_title": "Kodni kiriting",
+    "otp_desc": "Biz {{phone}} raqamiga kod yubordik.",
+    "otp_resend": "Kodni qayta yuborish",
+    "otp_resend_in": "Qayta yuborish {{sec}} soniyadan keyin",
+    "pin_setup_title": "PIN-kodni o‘rnating",
+    "pin_setup_desc": "Ilovaga kirish uchun 6 xonali PIN tanlang.",
+    "pin_confirm_title": "PIN-kodni tasdiqlang",
+    "pin_unlock_title": "Salom",
+    "pin_unlock_desc": "Davom etish uchun PIN-kodni kiriting",
+    "use_biometric": "Biometriyadan foydalanish",
+    "invalid_pin": "PIN noto‘g‘ri"
+  },
+  "tabs": {
+    "home": "Bosh sahifa",
+    "cards": "Kartalar",
+    "payments": "To‘lovlar",
+    "history": "Tarix",
+    "profile": "Profil"
+  },
+  "home": {
+    "hello": "Salom",
+    "total_balance": "Umumiy balans",
+    "quick_actions": "Tezkor amallar",
+    "transfer": "O‘tkazma",
+    "pay": "To‘lov",
+    "qr": "QR-kod",
+    "topup": "To‘ldirish",
+    "recent": "So‘nggi operatsiyalar",
+    "cashback": "Keshbek",
+    "rewards_title": "Sizning mukofotlaringiz",
+    "rewards_desc": "Bu oydagi keshbek va bonuslar",
+    "insights": "Tahlil",
+    "spend_this_month": "Bu oygi xarajat",
+    "income_this_month": "Bu oygi daromad",
+    "promotion_title": "Premium kartani kashf eting",
+    "promotion_desc": "Yuqori limitlar va keng imtiyozlar."
+  },
+  "cards": {
+    "title": "Kartalar",
+    "add_card": "Karta qo‘shish",
+    "card_details": "Karta ma'lumotlari",
+    "freeze": "Muzlatish",
+    "unfreeze": "Faollashtirish",
+    "frozen": "Muzlatilgan",
+    "active": "Faol",
+    "limits": "Limitlar",
+    "settings": "Sozlamalar",
+    "history": "Tarix",
+    "make_primary": "Asosiy karta qilish",
+    "show_details": "Ma'lumotlarni ko‘rsatish",
+    "share": "Ulashish"
+  },
+  "transfers": {
+    "title": "O‘tkazma",
+    "to_card": "Kartaga",
+    "to_phone": "Telefon raqamga",
+    "to_bank": "Bankka",
+    "via_qr": "QR orqali",
+    "recipients": "So‘nggi qabul qiluvchilar",
+    "recipient_name": "Qabul qiluvchi",
+    "card_number": "Karta raqami",
+    "amount_hint": "0 so‘m",
+    "fee_free": "Komissiyasiz",
+    "review": "Ko‘rib chiqish",
+    "send": "Yuborish",
+    "success_title": "O‘tkazma yuborildi",
+    "success_desc": "Pul muvaffaqiyatli yetkazildi."
+  },
+  "payments": {
+    "title": "To‘lovlar",
+    "categories": {
+      "mobile": "Mobil aloqa",
+      "internet": "Internet",
+      "utilities": "Kommunal",
+      "taxes": "Soliq va jarima",
+      "tv": "TV va obuna",
+      "transport": "Transport"
+    },
+    "search_placeholder": "Xizmat qidirish",
+    "popular": "Mashhur xizmatlar"
+  },
+  "history": {
+    "title": "Tarix",
+    "search_placeholder": "Operatsiya qidirish",
+    "filter_all": "Hammasi",
+    "filter_in": "Tushum",
+    "filter_out": "Chiqim",
+    "empty": "Operatsiyalar topilmadi"
+  },
+  "analytics": {
+    "title": "Tahlil",
+    "income": "Daromad",
+    "expense": "Xarajat",
+    "by_category": "Kategoriya bo‘yicha"
+  },
+  "profile": {
+    "title": "Profil",
+    "personal": "Shaxsiy ma'lumotlar",
+    "security": "Xavfsizlik",
+    "language": "Til",
+    "theme": "Mavzu",
+    "notifications": "Bildirishnomalar",
+    "support": "Yordam markazi",
+    "about": "Ilova haqida",
+    "logout": "Chiqish",
+    "theme_system": "Tizim",
+    "theme_light": "Yorug‘",
+    "theme_dark": "Tungi"
+  },
+  "support": {
+    "title": "Yordam",
+    "faq": "Tez-tez so‘raladigan savollar",
+    "chat": "Onlayn chat",
+    "call": "Qo‘ng‘iroq qilish",
+    "feedback": "Fikr bildirish"
+  },
+  "categories": {
+    "transfer": "O‘tkazma",
+    "mobile": "Mobil",
+    "utilities": "Kommunal",
+    "shopping": "Xaridlar",
+    "food": "Oziq-ovqat",
+    "transport": "Transport",
+    "entertainment": "Ko‘ngilochar",
+    "salary": "Ish haqi",
+    "cashback": "Keshbek",
+    "other": "Boshqa"
+  }
+}
