@@ -9,7 +9,7 @@ import { AppHeader } from '@/components/layout/AppHeader';
 import { Text } from '@/components/primitives/Text';
 import { OTPInput } from '@/components/forms/OTPInput';
 import { PrimaryButton } from '@/components/buttons/PrimaryButton';
-import { useAuthStore } from '@/store/auth.store';
+import { OtpError, useAuthStore } from '@/store/auth.store';
 import { useUIStore } from '@/store/ui.store';
 import { useTheme } from '@/theme/ThemeProvider';
 import { config } from '@/config/env';
@@ -19,13 +19,16 @@ export default function OtpScreen() {
   const { spacing, colors } = useTheme();
   const router = useRouter();
   const phone = useAuthStore((s) => s.phone);
+  const devCode = useAuthStore((s) => s.devCode);
   const verifyOtp = useAuthStore((s) => s.verifyOtp);
+  const requestOtp = useAuthStore((s) => s.requestOtp);
   const showToast = useUIStore((s) => s.showToast);
 
   const [code, setCode] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(config.otpResendSec);
+  const [secondsLeft, setSecondsLeft] = useState(60);
+  const [resending, setResending] = useState(false);
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
@@ -34,18 +37,35 @@ export default function OtpScreen() {
   }, [secondsLeft]);
 
   const submit = async (value: string) => {
+    if (value.length !== 6) return;
     setError(false);
     setSubmitting(true);
     try {
       const { requiresPinSetup } = await verifyOtp(value);
       if (requiresPinSetup) router.replace('/(auth)/pin-setup');
       else router.replace('/(auth)/pin-unlock');
-    } catch {
+    } catch (e) {
       setError(true);
-      showToast({ message: 'Invalid verification code', variant: 'error' });
+      const msg = e instanceof OtpError ? e.message : 'Invalid verification code';
+      showToast({ message: msg, variant: 'error' });
       setCode('');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const resend = async () => {
+    if (!phone || resending) return;
+    setResending(true);
+    try {
+      const res = await requestOtp(phone);
+      setSecondsLeft(res.resendInSeconds);
+      showToast({ message: 'New code sent', variant: 'success' });
+    } catch (e) {
+      const msg = e instanceof OtpError ? e.message : 'Could not resend code';
+      showToast({ message: msg, variant: 'error' });
+    } finally {
+      setResending(false);
     }
   };
 
@@ -71,9 +91,9 @@ export default function OtpScreen() {
                 {t('auth.otp_resend_in', { sec: secondsLeft })}
               </Text>
             ) : (
-              <Pressable onPress={() => setSecondsLeft(config.otpResendSec)} hitSlop={8}>
+              <Pressable onPress={resend} hitSlop={8} disabled={resending}>
                 <Text variant="bodySm" weight="600" style={{ color: colors.brand.accent }}>
-                  {t('auth.otp_resend')}
+                  {resending ? '…' : t('auth.otp_resend')}
                 </Text>
               </Pressable>
             )}
@@ -87,9 +107,15 @@ export default function OtpScreen() {
             loading={submitting}
             disabled={code.length !== 6}
           />
-          <Text variant="micro" tone="muted" align="center" style={{ marginTop: spacing.xs }}>
-            Demo code: 123456
-          </Text>
+          {devCode ? (
+            <Text variant="micro" tone="muted" align="center" style={{ marginTop: spacing.xs }}>
+              Dev code: {devCode}
+            </Text>
+          ) : !config.hasBackend ? (
+            <Text variant="micro" tone="muted" align="center" style={{ marginTop: spacing.xs }}>
+              Demo code: 123456
+            </Text>
+          ) : null}
         </View>
       </KeyboardAvoidingView>
     </ScreenContainer>

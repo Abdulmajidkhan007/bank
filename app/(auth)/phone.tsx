@@ -10,11 +10,12 @@ import { Text } from '@/components/primitives/Text';
 import { InputField } from '@/components/forms/InputField';
 import { PrimaryButton } from '@/components/buttons/PrimaryButton';
 import { Phone } from '@/components/icons';
-import { useAuthStore } from '@/store/auth.store';
+import { OtpError, useAuthStore } from '@/store/auth.store';
 import { useUIStore } from '@/store/ui.store';
 import { useTheme } from '@/theme/ThemeProvider';
 import { phoneSchema } from '@/utils/validation';
 import { formatPhoneUz } from '@/utils/format';
+import { config } from '@/config/env';
 
 export default function PhoneScreen() {
   const { t } = useTranslation();
@@ -44,7 +45,15 @@ export default function PhoneScreen() {
       await requestOtp(`+${parsed.data}`);
       router.push('/(auth)/otp');
     } catch (e) {
-      showToast({ message: 'Something went wrong', variant: 'error' });
+      if (e instanceof OtpError) {
+        if (e.code === 'COOLDOWN' && e.retryInSeconds) {
+          setError(`Please wait ${e.retryInSeconds}s before requesting another code`);
+        } else {
+          showToast({ message: e.message, variant: 'error' });
+        }
+      } else {
+        showToast({ message: 'Network error, try again', variant: 'error' });
+      }
     } finally {
       setSubmitting(false);
     }
@@ -85,6 +94,11 @@ export default function PhoneScreen() {
               loading={submitting}
               disabled={!valid}
             />
+            {!config.hasBackend ? (
+              <Text variant="micro" tone="muted" align="center" style={{ marginTop: spacing.sm }}>
+                Demo mode · backend not configured
+              </Text>
+            ) : null}
           </View>
         </View>
       </KeyboardAvoidingView>

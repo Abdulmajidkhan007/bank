@@ -1,5 +1,8 @@
+const apiBaseUrlFromEnv = process.env.EXPO_PUBLIC_API_BASE_URL;
+
 export const config = {
-  apiBaseUrl: 'https://api.uzcard.mock/v1',
+  apiBaseUrl: apiBaseUrlFromEnv ?? '',
+  hasBackend: Boolean(apiBaseUrlFromEnv),
   appName: 'UzCard Bank',
   supportPhone: '+998 71 200 50 50',
   supportEmail: 'help@uzcard.mock',

@@ -2,17 +2,30 @@ import { create } from 'zustand';
 import { secureStorage } from '@/services/storage/secure';
 import { sha256 } from '@/services/crypto/hash';
 import { mockUser } from '@/services/api/mock';
+import { authApi } from '@/services/api/endpoints/auth';
+import { config } from '@/config/env';
 import { User } from '@/types/domain';
 
 export type AuthStatus = 'idle' | 'loading' | 'unauthenticated' | 'pin-required' | 'authenticated';
+
+export class OtpError extends Error {
+  readonly code: string;
+  readonly retryInSeconds?: number;
+  constructor(message: string, code: string, retryInSeconds?: number) {
+    super(message);
+    this.code = code;
+    this.retryInSeconds = retryInSeconds;
+  }
+}
 
 type AuthState = {
   status: AuthStatus;
   user: User | null;
   phone: string | null;
   hasPin: boolean;
+  devCode: string | null;
   initialize: () => Promise<void>;
-  requestOtp: (phone: string) => Promise<void>;
+  requestOtp: (phone: string) => Promise<{ resendInSeconds: number; devCode?: string }>;
   verifyOtp: (code: string) => Promise<{ requiresPinSetup: boolean }>;
   setupPin: (pin: string) => Promise<void>;
   unlockWithPin: (pin: string) => Promise<boolean>;
@@ -27,6 +40,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   phone: null,
   hasPin: false,
+  devCode: null,
 
   async initialize() {
     set({ status: 'loading' });
@@ -42,24 +56,69 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   async requestOtp(phone) {
-    await delay(450);
-    set({ phone });
+    set({ phone, devCode: null });
+
+    if (!config.hasBackend) {
+      await delay(450);
+      return { resendInSeconds: 60 };
+    }
+
+    try {
+      const res = await authApi.requestOtp(phone);
+      set({ devCode: res.devCode ?? null });
+      return { resendInSeconds: res.resendInSeconds, devCode: res.devCode };
+    } catch (err) {
+      const e = err as { code?: string; message?: string; details?: { retryInSeconds?: number } };
+      throw new OtpError(e.message ?? 'Could not send code', e.code ?? 'NETWORK', e.details?.retryInSeconds);
+    }
   },
 
   async verifyOtp(code) {
-    await delay(450);
-    if (code !== MOCK_OTP) {
-      throw new Error('Invalid verification code');
+    const phone = get().phone;
+
+    if (!config.hasBackend) {
+      await delay(450);
+      if (code !== MOCK_OTP) throw new OtpError('Invalid verification code', 'INVALID');
+      await secureStorage.setAccessToken('mock.access.token');
+      await secureStorage.setRefreshToken('mock.refresh.token');
+      const existingPin = await secureStorage.getPinHash();
+      if (existingPin) {
+        set({ user: mockUser, hasPin: true, status: 'authenticated' });
+        return { requiresPinSetup: false };
+      }
+      set({ user: mockUser, hasPin: false, status: 'pin-required' });
+      return { requiresPinSetup: true };
     }
-    await secureStorage.setAccessToken('mock.access.token');
-    await secureStorage.setRefreshToken('mock.refresh.token');
-    const existingPin = await secureStorage.getPinHash();
-    if (existingPin) {
-      set({ user: mockUser, hasPin: true, status: 'authenticated' });
-      return { requiresPinSetup: false };
+
+    if (!phone) throw new OtpError('Phone not set', 'NO_PHONE');
+
+    try {
+      const res = await authApi.verifyOtp(phone, code);
+      await secureStorage.setAccessToken(res.accessToken);
+      await secureStorage.setRefreshToken(res.refreshToken);
+
+      const user: User = {
+        id: res.user.id,
+        fullName: res.user.fullName || mockUser.fullName,
+        phone: res.user.phone,
+        avatarColor: mockUser.avatarColor,
+        initials:
+          res.user.fullName
+            ? res.user.fullName.trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase()).join('')
+            : mockUser.initials,
+      };
+
+      const existingPin = await secureStorage.getPinHash();
+      if (existingPin) {
+        set({ user, hasPin: true, status: 'authenticated' });
+        return { requiresPinSetup: false };
+      }
+      set({ user, hasPin: false, status: 'pin-required' });
+      return { requiresPinSetup: true };
+    } catch (err) {
+      const e = err as { code?: string; message?: string };
+      throw new OtpError(e.message ?? 'Invalid verification code', e.code ?? 'INVALID');
     }
-    set({ user: mockUser, hasPin: false, status: 'pin-required' });
-    return { requiresPinSetup: true };
   },
 
   async setupPin(pin) {
@@ -87,7 +146,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   async logout() {
     await secureStorage.clear();
-    set({ status: 'unauthenticated', user: null, phone: null, hasPin: false });
+    set({ status: 'unauthenticated', user: null, phone: null, hasPin: false, devCode: null });
   },
 }));
 

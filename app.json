@@ -5,13 +5,10 @@
     "scheme": "uzcard",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0B2A4A"
+    "runtimeVersion": {
+      "policy": "appVersion"
     },
     "ios": {
       "supportsTablet": false,
@@ -21,11 +18,7 @@
       }
     },
     "android": {
-      "package": "uz.uzcard.bank",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0B2A4A"
-      }
+      "package": "uz.uzcard.bank"
     },
     "plugins": [
       "expo-router",
